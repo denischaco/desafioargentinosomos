@@ -17,6 +17,8 @@
                         'accent-yellow': '#FBBF24',
                         'card-bg': '#E5E7EB',
                         'game-bg': '#F3F4F6',
+                        'celeste-arg': '#74ACDF', /* Celeste de la bandera */
+                        'sol-oro': '#FFD100', /* Amarillo del Sol */
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -31,7 +33,38 @@
             background-color: #F3F4F6;
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
+            position: relative; 
         }
+
+        /* Bandera Argentina Gigante y Difuminada (CSS pseudo-elemento) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+            opacity: 0.1; 
+            /* Bandera Argentina: Celeste, Blanco, Sol */
+            background: 
+                radial-gradient(circle at 50% 50%, #FFD100 0%, transparent 5%), 
+                linear-gradient(to bottom, #74ACDF 0%, #74ACDF 33%, #FFFFFF 33%, #FFFFFF 66%, #74ACDF 66%, #74ACDF 100%);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        /* Clase para el Borde Celeste y Blanco (simulado con box-shadow) */
+        .argentina-frame {
+            position: relative;
+            /* Tres capas de sombra para simular el borde tricolor: Celeste -> Blanco -> Celeste */
+            box-shadow: 
+                0 0 0 4px #74ACDF, /* Celeste (exterior) */
+                0 0 0 8px white,    /* Blanco (medio) */
+                0 0 0 12px #74ACDF; /* Celeste (interior) */
+            border-radius: 1rem;
+        }
+
         .avatar-card {
             transition: all 0.2s ease-in-out;
             cursor: pointer;
@@ -62,12 +95,22 @@
         }
     </style>
 </head>
-<body class="p-4 sm:p-8 flex items-center justify-center">
+<body class="p-16 flex items-center justify-center">
 
-    <div id="game-container" class="w-full max-w-4xl bg-white rounded-xl shadow-2xl p-6 sm:p-10 border-t-8 border-primary-blue">
+    <div id="game-container" class="w-full max-w-4xl bg-white rounded-xl shadow-2xl p-6 sm:p-10 argentina-frame">
         
-        <!-- Contenido dinámico del juego -->
-        <div id="game-content">
+        <!-- Solcito Centrado (positionado absolutamente para sobresalir del marco) -->
+        <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 z-30">
+            <svg class="w-20 h-20 text-sol-oro drop-shadow-xl" viewBox="0 0 24 24" fill="currentColor">
+                <!-- Sol de Mayo simplificado (Círculo con rayos) -->
+                <circle cx="12" cy="12" r="7" fill="#FFD100"/>
+                <!-- Rayos (alternando rectos y ondulados para un efecto más dinámico) -->
+                <path fill="#FFD100" d="M12 0L14.5 4.5L18.5 2.5L16 6.5L20 8.5L16.5 11L24 12L16.5 13L20 15.5L16 17.5L18.5 21.5L14.5 19.5L12 24L9.5 19.5L5.5 21.5L8 17.5L4 15.5L7.5 13L0 12L7.5 11L4 8.5L8 6.5L5.5 2.5L9.5 4.5Z"/>
+            </svg>
+        </div>
+
+        <!-- Contenido dinámico del juego (pt-8 agregado para dejar espacio al sol) -->
+        <div id="game-content" class="pt-8"> 
             <!-- Esto será poblado por JavaScript -->
         </div>
 
@@ -197,7 +240,6 @@
             document.querySelectorAll('.avatar-card').forEach(card => {
                 card.addEventListener('click', () => {
                     // Simular el arriesgue con un mensaje
-                    // FIX: Se removió el carácter de escape (\) antes del template literal para evitar SyntaxError.
                     console.log(`El usuario 'arriesgó' con la Ficha ${card.dataset.avatarId}`);
                     gameState = 'reveal';
                     renderRevealScreen();
